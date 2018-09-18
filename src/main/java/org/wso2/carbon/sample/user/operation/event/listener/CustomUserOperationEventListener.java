@@ -25,7 +25,8 @@ public class CustomUserOperationEventListener extends AbstractUserOperationEvent
     @Override
     public boolean doPreAddUser(String userName, Object credential, String[] roleList, Map<String, String> claims, String profile, UserStoreManager userStoreManager) throws UserStoreException {
 
-        if (StringUtils.isNotBlank(claims.get("http://wso2.org/claims/identity/askPassword"))) {
+        if (StringUtils.isNotBlank(claims.get("http://wso2.org/claims/identity/askPassword")) && credential
+                instanceof StringBuffer) {
 
             String characters = "23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#$%&*";
             String digits = "23456789";
@@ -56,9 +57,8 @@ public class CustomUserOperationEventListener extends AbstractUserOperationEvent
             char[] password = new char[pw.length()];
             pw.getChars(0, pw.length(), password, 0);
 
-
-            ((StringBuffer)credential).setLength(0);
-            ((StringBuffer)credential).append(password);
+            ((StringBuffer) credential).setLength(0);
+            ((StringBuffer) credential).append(password);
         }
         return true;
     }
